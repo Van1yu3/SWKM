@@ -28,7 +28,7 @@ to noisy observations by default.}
 
 \item{nstart}{The number of initial random sets chosen from (distinct) rows in \code{x}. Omitted if \code{centers} is provided. Default is 20.}
 
-\item{algorithm}{Character; either "\code{Hartigon-Wong}" or "\code{Forgy}". Default is "\code{Hartigon-Wong}".}
+\item{algorithm}{Character; either "\code{Hartigan-Wong}" or "\code{Forgy}". Default is "\code{Hartigon-Wong}".}
 
 \item{...}{unused.}
 }

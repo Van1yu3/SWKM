@@ -191,7 +191,6 @@ List kmeans_hartigan(NumericMatrix data, NumericMatrix centers, NumericVector we
     index=cl[i];
     wcss += Dis(i,index) * W[i] ;
   }
-  wcss /= sum(weight);
   ++cl;
   return List::create(Named("centers")=wrap(C),
                       Named("cluster")=wrap(cl),

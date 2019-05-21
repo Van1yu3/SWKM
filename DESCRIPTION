@@ -1,7 +1,7 @@
 Package: SWKM
 Type: Package
 Title: Sparse Weighted K-Means
-Version: 1.0
+Version: 0.0.9
 Date: 2019-05-20
 Authors@R: 
     person(given = "Wenyu",

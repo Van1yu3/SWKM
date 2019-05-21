@@ -6,7 +6,7 @@
 #' @param weight A vector of \emph{n} positive elements representing weights on observations.
 #' @param centers A \emph{K} by \emph{p} matrix indicating initial (distinct) cluster centers.
 #' @param nstart The number of initial random sets chosen from (distinct) rows in \code{x}. Omitted if \code{centers} is provided. Default is 20.
-#' @param algorithm Character; either "\code{Hartigon-Wong}" or "\code{Forgy}". Default is "\code{Hartigon-Wong}".
+#' @param algorithm Character; either "\code{Hartigan-Wong}" or "\code{Forgy}". Default is "\code{Hartigan-Wong}".
 #' @keywords Weighted K-Means Clustering
 #' @return The function returns a list of the following components:
 #' \item{centers}{the centers of the clustering result.}
@@ -90,16 +90,22 @@ kmeans.weight <- function(x,K=NULL,weight=NULL,centers=NULL,nstart=20,algorithm=
           centers[k,] <- (weight[Cs==k]/sum(weight[Cs==k]))%*%x[Cs==k,,drop=FALSE]
         niter <- niter + 1
       }
+      WCSS <- GetWCSS.weight(x,Cs,weight/sum(weight))$wcss
+      if(WCSS<WCSS.min) {
+        WCSS.min <- WCSS
+        centers.min <- centers
+        Cs.min <- Cs
+      }
     }
     #### Hartigan Algorithm ####
     if(algorithm=="Hartigan-Wong"){
-      return(kmeans_hartigan(x,centers,weight))
-    }
-    WCSS <- GetWCSS.weight(x,Cs,weight/sum(weight))$wcss
-    if(WCSS<WCSS.min) {
-      WCSS.min <- WCSS
-      centers.min <- centers
-      Cs.min <- Cs
+      out <- kmeans_hartigan(x,centers,weight/sum(weight))
+      WCSS <- out$wcss
+      if(WCSS<WCSS.min) {
+        WCSS.min <- WCSS
+        centers.min <- out$centers
+        Cs.min <- out$cluster
+      }
     }
   }
   return(list(centers=centers.min,cluster=Cs.min,weight=weight,wcss=WCSS.min))
