@@ -1,11 +1,20 @@
+---
+output: github_document
+---
 
-SWKM
-====
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# SWKM
 
 The goal of SWKM is to perform (sparse) weighted K-Means algorithm on observations with weights. If some observations are known to be noisier than the others, the method in this package can be applied to adaptively tune weights and cluster the data.
 
-Installation
-------------
+## Installation
 
 You can install the released version of SWKM from [CRAN](https://CRAN.R-project.org) with (NOT Available Now):
 
@@ -19,9 +28,7 @@ Another option is to set your working path to the whole folder and run the follo
 library(devtools)
 devtools::install("../SWKM")
 ```
-
-Main Functions
---------------
+## Main Functions
 
 `kmeans.weight`: Perform weighted K-Means algorithm on data.
 
@@ -31,12 +38,11 @@ Main Functions
 
 `KMeansSparseCluster.permute.weight`: Choose sparsity parameter for sparse weighted K-Means algorithm. Usually used before `KMeansSparseCluster.weight`, and after weight parameter is tuned or known.
 
-Example
--------
+## Example
 
 This is a basic example which shows you how to solve a common problem:
 
-``` r
+```{r example,eval=FALSE}
 # generate data
 set.seed(1)
 require(mvtnorm)

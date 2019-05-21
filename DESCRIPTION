@@ -1,0 +1,18 @@
+Package: SWKM
+Type: Package
+Title: Sparse Weighted K-Means
+Version: 1.0
+Date: 2019-05-20
+Authors@R: 
+    person(given = "Wenyu",
+           family = "Zhang",
+           role = c("aut", "cre"),
+           email = "wyzhangxii@outlook.com")
+Description: An implementation of (sparse) weighted K-Means clustering algorithm 
+    on observations with weights.
+License: GPL (>= 2) | file LICENSE
+Encoding: UTF-8
+Imports: Rcpp (>= 1.0.1)
+Suggests: mvtnorm 
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 6.1.1
