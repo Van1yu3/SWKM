@@ -7,10 +7,11 @@ The goal of SWKM is to perform (sparse) weighted K-Means algorithm on observatio
 Installation
 ------------
 
-You can install the released version of SWKM from [CRAN](https://CRAN.R-project.org) with (NOT Available Now):
+You can install the released version of SWKM from Github:
 
 ``` r
-install.packages("SWKM")
+library(devtools)
+devtools::install_github("Van1yu3/SWKM")
 ```
 
 Another option is to set your working path to the whole folder and run the following code:
