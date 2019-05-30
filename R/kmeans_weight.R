@@ -21,31 +21,29 @@
 #' @useDynLib SWKM
 #' @export
 #' @examples
-#' # generate data
+#' \dontrun{
 #' set.seed(1)
-#' require(mvtnorm)
-#' n <- 60  #sample size
-#' p <- 1000 #dimension of features
-#' q <- 50  #dimension of cluster-specific features
-#' mu <- 0.8
-#' MU <- c(0,-mu,mu)
-#' sigma0 <- 5
-#' data <- rbind(rmvnorm(n/3,rep(0,p)),rmvnorm(n/3,c(rep(-mu,q),rep(0,p-q))),
-#' rmvnorm(n/3,c(rep(mu,q),rep(0,p-q))))
-#' # add noise to 10 random observations
-#' noisy.lab <- sample(n,10)
-#' for (k in 1:3){
-#' check <- (noisy.lab<n*k/3+1) & (noisy.lab>n/3*(k-1))
-#' temp.lab <- noisy.lab[check]
-#' num <- length(temp.lab)
-#' if(any(check))
-#'   data[temp.lab,] <- rmvnorm(num,c(rep(MU[k],q),rep(0,p-q)),sigma = diag(sigma0,p))
-#' }
-#' # apply kmeans.weight.tune to tune weight parameter U
-#' res.tuneU <- kmeans.weight.tune(data,K=3,noisy.lab=noisy.lab)
+#' data("DMdata")
+#' # data preprocessing
+#' data <- t(DMdata$data)
+#' data_rank <- apply(data, 2, rank) 
+#' data_rank_center<- t(t(data_rank) - colMeans(data_rank)) 
+#' data_rank_center_scale <- t(t(data_rank_center)/apply(data_rank_center, 2, sd)) 
+#' data_processed <-  t(data_rank_center_scale) 
+#' # tune the number of cluster K
+#' # nperms and nstart are set to be small in order to save computation time
+#' cK <- ChooseK(data_processed[-DMdata$noisy.label,],nClusters = 1:6,nperms = 10,nstart = 5)
+#' plot(cK)
+#' K <- cK$OptimalK
+#' # tune weight
+#'   res.tuneU <- kmeans.weight.tune(x = data_processed,K = K,
+#'   noisy.lab = DMdata$noisy.label,nperms = 10,nstart = 5)
 #' plot(res.tuneU)
-#' # perform weighted K-Means to get the clustering result
-#' res <- kmeans.weight(data,K=3,weight=res.tuneU$bestweight)
+#' # perform weighted K-means
+#' res <- kmeans.weight(x = data_processed,K = K,weight = res.tuneU$bestweight)
+#' # check the result
+#' table(res$cluster,DMdata$true.label)
+#' }
 
 kmeans.weight <- function(x,K=NULL,weight=NULL,centers=NULL,nstart=20,algorithm="Hartigan-Wong"){
   if (is.null(K) && is.null(centers))
@@ -72,6 +70,12 @@ kmeans.weight <- function(x,K=NULL,weight=NULL,centers=NULL,nstart=20,algorithm=
   }
   if(length(weight)<=K)
     stop("number of positive weights should be larger than K and nrow(centers)!")
+  if(K==1){
+    centers <- weight/sum(weight)%*%x
+    wcss <- sum(weight/sum(weight)%*%(sweep(x,2,centers)^2))
+    cluster <- rep(1,nrow(x))
+    return(list(centers=centers,cluster=cluster,weight=weight,wcss=wcss))
+  }
   WCSS.min <- Inf
   for(ns in 1:nstart){
     if(ns > 1) centers <- x[sample(nrow(x),K),]

@@ -7,7 +7,7 @@
 #' @param weight.seq A candidate weight matrix, each row indicating one candidate weight vector. If \code{NULL},
 #' the function will assign a sequence of candidate weight \code{c(1,0.8,0.5,0.2,0.1,0.08,0.05,0.02,0.01,0.005,0.001)}
 #' to noisy observations by default.
-#' @param nperms Number of permutations. Default is 20.
+#' @param nperms Number of permutations. Default is \code{20}.
 #' @param ... unused.
 #' @inherit kmeans.weight examples
 #' @keywords Weighted K-Means Clustering Tuning Parameter

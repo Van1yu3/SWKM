@@ -12,7 +12,9 @@ Description: An implementation of (sparse) weighted K-Means clustering algorithm
     on observations with weights.
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
+LazyData: true
 Imports: Rcpp (>= 1.0.1)
-Suggests: mvtnorm 
+Suggests: mvtnorm, knitr, rmarkdown 
+VignetteBuilder: knitr 
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 6.1.1

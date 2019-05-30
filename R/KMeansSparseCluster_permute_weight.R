@@ -9,7 +9,8 @@
 #' @inherit KMeansSparseCluster.weight examples
 #' @keywords Sparse Weighted K-Means Clustering Tuning Parameter
 #' @family sparse weighted K-Means functions 
-#' @author Wenyu Zhang, Jiaxuan Wangwu and Zhixiang Lin
+#' @author Wenyu Zhang
+#' @references Daniela M Witten and Robert Tibshirani (2010). A framework for feature selection in clustering.  \emph{Journal of the American Statistical Association}, \bold{105(490)}, 713-726.
 #' @export
 
 

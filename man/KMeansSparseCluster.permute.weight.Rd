@@ -15,7 +15,7 @@ KMeansSparseCluster.permute.weight(x, K = NULL, weight = NULL,
 
 \item{weight}{A vector of \emph{n} positive elements representing weights on observations.}
 
-\item{nperms}{Number of permutations. Default is 20.}
+\item{nperms}{Number of permutations. Default is \code{20}.}
 
 \item{nstart}{The number of initial random sets chosen from (distinct) rows in \code{x}. Omitted if \code{centers} is provided. Default is 20.}
 
@@ -47,41 +47,36 @@ The sparsity parameter controls the L1 bound on w, the feature weights.
  A permutation approach is used to select the sparsity parameter.
 }
 \examples{
-# generate data
+\dontrun{
 set.seed(1)
-require(mvtnorm)
-n <- 60  #sample size
-p <- 1000 #dimension of features
-q <- 50  #dimension of cluster-specific features
-mu <- 0.8
-MU <- c(0,-mu,mu)
-sigma0 <- 5
-data <- rbind(rmvnorm(n/3,rep(0,p)),rmvnorm(n/3,c(rep(-mu,q),rep(0,p-q))),
-rmvnorm(n/3,c(rep(mu,q),rep(0,p-q))))
-# add noise to 10 random observations
-noisy.lab <- sample(n,10)
-for (k in 1:3){
-check <- (noisy.lab<n*k/3+1) & (noisy.lab>n/3*(k-1))
-temp.lab <- noisy.lab[check]
-num <- length(temp.lab)
-if(any(check))
-  data[temp.lab,] <- rmvnorm(num,c(rep(MU[k],q),rep(0,p-q)),sigma = diag(sigma0,p))
-}
-# run kmeans.weight.tune to tune weight parameter U
-res.tuneU <- kmeans.weight.tune(data,K=3,noisy.lab=noisy.lab)
+data("NormalDisData")
+cK <- ChooseK(NormalDisData$data[-NormalDisData$noisy.label,],nClusters = 1:6)
+plot(cK)
+K <- cK$OptimalK
+res.tuneU <- kmeans.weight.tune(x = NormalDisData$data,K = K,
+noisy.lab = NormalDisData$noisy.label,weight.seq = NULL)
 plot(res.tuneU)
-weight <- res.tuneU$bestweight
-# run KMeansSparseCluster.weight.permute to tune sparsity parameter s
-res.tunes <- KMeansSparseCluster.permute.weight(data,K=3,weight=weight)
-res <- KMeansSparseCluster.weight(data,K=3,weight=weight,wbounds=res.tunes$bestw)
+res.tunes <- KMeansSparseCluster.permute.weight(x = NormalDisData$data,K = K,
+weight = res.tuneU$bestweight)
+res <- KMeansSparseCluster.weight(x = NormalDisData$data,K = K,
+wbounds = res.tunes$bestw,weight = res.tuneU$bestweight)
+#check the clustering result, the number of features selected and the 50 most important features 
+table(res[[1]]$Cs,NormalDisData$true.label)
+sum(res[[1]]$ws!=0)
+order(res[[1]]$ws,decreasing = TRUE)[1:50]
+}
+}
+\references{
+Daniela M Witten and Robert Tibshirani (2010). A framework for feature selection in clustering.  \emph{Journal of the American Statistical Association}, \bold{105(490)}, 713-726.
 }
 \seealso{
-Other sparse weighted K-Means functions: \code{\link{KMeansSparseCluster.weight}},
+Other sparse weighted K-Means functions: \code{\link{ChooseK}},
+  \code{\link{KMeansSparseCluster.weight}},
   \code{\link{kmeans.weight.tune}},
   \code{\link{kmeans.weight}}
 }
 \author{
-Wenyu Zhang, Jiaxuan Wangwu and Zhixiang Lin
+Wenyu Zhang
 }
 \concept{sparse weighted K-Means functions}
 \keyword{Clustering}

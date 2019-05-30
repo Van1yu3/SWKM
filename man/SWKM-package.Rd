@@ -3,32 +3,35 @@
 \alias{SWKM}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  Sparse Weighted K-Means
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  An implementation of (sparse) weighted K-Means clustering algorithm 
+    on observations with weights.
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+  Main Functions:
+  
+  \code{kmeans.weight}: Perform weighted K-Means algorithm on data.
+
+  \code{kmeans.weight.tune}: Choose weight parameter for (sparse) weighted K-Means algorithm. Usually used before \code{kmeans.weight} or \code{KMeansSparseCluster.weight}.
+
+  \code{KMeansSparseCluster.weight}: Perform sparse weighted K-Means algorithm on data.
+
+  \code{KMeansSparseCluster.permute.weight}: Choose sparsity parameter for sparse weighted K-Means algorithm. Usually used before \code{KMeansSparseCluster.weight}, and after weight parameter is tuned or known.
+
+  \code{ChooseK}: Choose the number of clusters K for (sparse) weighted K-Means clustering. Usually used before clustering method is performed.
+  
+  Please refer to the vigenette for more details.
 }
 \author{
-Your Name, email optional.
+Wenyu ZHANG.
 
-Maintainer: Your Name <your@email.com>
+Maintainer: Wenyu ZHANG <wyzhangxii@outlook.com>
 }
 \references{
-  This optional section can contain literature or other references for
-  background information.
+  Daniela M Witten and Robert Tibshirani (2010). A framework for feature selection in clustering.  \emph{Journal of the American Statistical Association}, \bold{105(490)}, 713-726.
+  
+  Robert, T. \emph{et al.} (2001). Estimating the number of clusters in a data set via the gap statistic. \emph{Journal of the Royal Statistical Society: Series B (Statistical Methodology)}, \bold{63(2)}, 411-423.
 }
-\keyword{ package }
-\seealso{
-  Optional links to other man pages
-}
-\examples{
-  \dontrun{
-     ## Optional simple examples of the most important functions
-     ## These can be in \dontrun{} and \donttest{} blocks.   
-  }
-}
+\keyword{ package, sparse, weighted, k-means }

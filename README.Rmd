@@ -23,12 +23,8 @@ library(devtools)
 devtools::install_github("Van1yu3/SWKM")
 ```
 
-Another option is to set your working path to the whole folder and run the following code:
+As this package depends on the RcppArmadillo package, Windows users should install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) in advance to compile the package.
 
-``` r
-library(devtools)
-devtools::install("../SWKM")
-```
 ## Main Functions
 
 `kmeans.weight`: Perform weighted K-Means algorithm on data.
@@ -39,37 +35,8 @@ devtools::install("../SWKM")
 
 `KMeansSparseCluster.permute.weight`: Choose sparsity parameter for sparse weighted K-Means algorithm. Usually used before `KMeansSparseCluster.weight`, and after weight parameter is tuned or known.
 
-## Example
+`ChooseK`: Choose the number of clusters K for (sparse) weighted K-Means clustering. Usually used before clustering method is performed.
 
-This is a basic example which shows you how to solve a common problem:
+## Examples
 
-```{r example,eval=FALSE}
-# generate data
-set.seed(1)
-require(mvtnorm)
-n <- 60  #sample size
-p <- 1000 #dimension of features
-q <- 50  #dimension of cluster-specific features
-mu <- 0.8
-MU <- c(0,-mu,mu)
-sigma0 <- 5
-data <- rbind(rmvnorm(n/3,rep(0,p)),rmvnorm(n/3,c(rep(-mu,q),rep(0,p-q))),
-rmvnorm(n/3,c(rep(mu,q),rep(0,p-q))))
-# add noise to 10 random observations
-noisy.lab <- sample(n,10)
-for (k in 1:3){
-check <- (noisy.lab<n*k/3+1) & (noisy.lab>n/3*(k-1))
-temp.lab <- noisy.lab[check]
-num <- length(temp.lab)
-if(any(check))
-  data[temp.lab,] <- rmvnorm(num,c(rep(MU[k],q),rep(0,p-q)),sigma = diag(sigma0,p))
-}
-library(SWKM)
-# run kmeans.weight.tune to tune weight parameter U
-res.tuneU <- kmeans.weight.tune(data,K=3,noisy.lab=noisy.lab)
-plot(res.tuneU)
-weight <- res.tuneU$bestweight
-# run KMeansSparseCluster.weight.permute to tune sparsity parameter s
-res.tunes <- KMeansSparseCluster.permute.weight(data,K=3,weight=weight)
-res <- KMeansSparseCluster.weight(data,K=3,weight=weight,wbounds=res.tunes$bestw)
-```
+Please refer to the [vigenette](https://) with two examples for a quick guide of SWKM package.
