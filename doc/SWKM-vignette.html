@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Wenyu Zhang" />
+
+<meta name="date" content="2019-05-31" />
+
+<title>A quick guide to SWKM</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">A quick guide to SWKM</h1>
+<h4 class="author">Wenyu Zhang</h4>
+<h4 class="date">2019-05-31</h4>
+
+
+
+<p>This vignette aims to illustrate the basic usage of <code>SWKM</code> package.</p>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>The released version of <code>SWKM</code> can be installed directly from Github with <code>devtools</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;Van1yu3/SWKM&quot;</span>)</code></pre></div>
+<p>As this package depends on the <code>RcppArmadillo</code> package, Windows users should install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> in advance to compile the package.</p>
+<p>Then we can load <code>SWKM</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SWKM)</code></pre></div>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We illustrate the usage of <code>SWKM</code> on two datasets.</p>
+<div id="perform-sparse-weighted-k-means-on-a-normal-distribution-dataset" class="section level3">
+<h3>1. Perform sparse weighted K-means on a normal distribution dataset</h3>
+<p>First load the dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;NormalDisData&quot;</span>)</code></pre></div>
+<p>The dataset contains the following information:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(NormalDisData)</code></pre></div>
+<pre><code>#&gt; [1] &quot;data&quot;        &quot;ncluster&quot;    &quot;true.label&quot;  &quot;noisy.label&quot;</code></pre>
+<p><code>data</code> is a 60 by 500 matrix indicating 60 observations with 500 features. The first 50 features are cluster-specific features.</p>
+<p><code>ncluster</code> is the true number of clusters, which is 3 here.</p>
+<p><code>true.label</code> is a 60-dimension vector indicating the true cluster.</p>
+<p><code>noisy.label</code> indicates the position of noisy observations. The noisy observations are generated from the normal distribution with the same mean but a larger variance.</p>
+<p>The number of clusters <code>K</code> must be determined before the clustering method is performed. The function <code>ChooseK</code>, which employs Gap Statistic(<em>Robert T. et al. (2001)</em>), is designed for this goal. A good way of lessening the impact of noisy observations on the choice of <code>K</code> is to remove them.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+cK &lt;-<span class="st"> </span><span class="kw">ChooseK</span>(NormalDisData<span class="op">$</span>data[<span class="op">-</span>NormalDisData<span class="op">$</span>noisy.label,],<span class="dt">nClusters =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)
+<span class="kw">plot</span>(cK)</code></pre></div>
+<pre><code>#&gt; Warning in arrows(nClusters, ymean - ysd, nClusters, ymean + ysd, length =
+#&gt; 0.05, : zero-length arrow is of indeterminate angle and so skipped</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Next, let’s tune weight for the noisy observations:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">K &lt;-<span class="st"> </span>cK<span class="op">$</span>OptimalK
+<span class="kw">system.time</span>(
+  res.tuneU &lt;-<span class="st"> </span><span class="kw">kmeans.weight.tune</span>(<span class="dt">x =</span> NormalDisData<span class="op">$</span>data,<span class="dt">K =</span> K,<span class="dt">noisy.lab =</span> NormalDisData<span class="op">$</span>noisy.label,<span class="dt">weight.seq =</span> <span class="ot">NULL</span>)
+)</code></pre></div>
+<pre><code>#&gt;    user  system elapsed 
+#&gt;   39.30   13.36   52.72</code></pre>
+<p>If <code>weight.seq</code> is provided, then <code>noisy.lab</code> will be omitted. Otherwise, the default setting is to fix the weight of normal observations as 1 and assign a sequence of candidate weight <code>c(1,0.8,0.5,0.2,0.1,0.08,0.05,0.02,0.01,0.005,0.001)</code> to noisy observations. See <code>help(&quot;kmeans.weight.tune&quot;)</code> for more details.</p>
+<p>We can plot the result to see which weight label is chosen:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res.tuneU)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>From the figure, the weight of noisy observations is chosen to be 0.02.</p>
+<p>The next step is to tune the sparsity parameter (<em>Daniela M Witten and Robert Tibshirani (2010)</em>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res.tunes &lt;-<span class="st"> </span><span class="kw">KMeansSparseCluster.permute.weight</span>(<span class="dt">x =</span> NormalDisData<span class="op">$</span>data,<span class="dt">K =</span> K,<span class="dt">weight =</span> res.tuneU<span class="op">$</span>bestweight)</code></pre></div>
+<p>Finally we can perform sparse weighted K-means with the weight and sparsity parameter:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw">KMeansSparseCluster.weight</span>(<span class="dt">x =</span> NormalDisData<span class="op">$</span>data,<span class="dt">K =</span> K,<span class="dt">wbounds =</span> res.tunes<span class="op">$</span>bestw,<span class="dt">weight =</span> res.tuneU<span class="op">$</span>bestweight)</code></pre></div>
+<p>Check the clustering result and the number of features selected:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(res[[<span class="dv">1</span>]]<span class="op">$</span>Cs,NormalDisData<span class="op">$</span>true.label)</code></pre></div>
+<pre><code>#&gt;    
+#&gt;      1  2  3
+#&gt;   1 18  0  0
+#&gt;   2  1  0 20
+#&gt;   3  1 20  0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(res[[<span class="dv">1</span>]]<span class="op">$</span>ws<span class="op">!=</span><span class="dv">0</span>)</code></pre></div>
+<pre><code>#&gt; [1] 181</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">order</span>(res[[<span class="dv">1</span>]]<span class="op">$</span>ws,<span class="dt">decreasing =</span> <span class="ot">TRUE</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>]</code></pre></div>
+<pre><code>#&gt;  [1]   1   5   7  25  44  29  11  28  24  27   6  38  37  26  47  39  33
+#&gt; [18]  21  43  10  40  41   3   8  45  42  14   4  20   2  31  12  46  48
+#&gt; [35]  18  32  15  30   9  16  34  22  49  13  50  35  36 329 349  19</code></pre>
+<p>As expected, the 50 most important features lie mainly in the first 50 features.</p>
+</div>
+<div id="perform-weighted-k-means-on-a-dirichlet-multinomial-distribution-dataset" class="section level3">
+<h3>2. Perform weighted K-means on a Dirichlet-multinomial distribution dataset</h3>
+<p>This dataset has a dimension of 100 by 5000, and simulates the read counts in single-cell epigenomic data. The noisy observations in this dataset are set to be with 90% missing values.</p>
+<p>The usage in this dataset is quite similar to the previous one, except that this dataset needs data preprocessing. One useful preprocessing method is to first take rank for each cell, then standardize the rank matrix to mean 0 and unit standard deviation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">data</span>(<span class="st">&quot;DMdata&quot;</span>)
+<span class="co"># data preprocessing</span>
+data &lt;-<span class="st"> </span><span class="kw">t</span>(DMdata<span class="op">$</span>data)
+data_rank &lt;-<span class="st"> </span><span class="kw">apply</span>(data, <span class="dv">2</span>, rank) 
+data_rank_center&lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">t</span>(data_rank) <span class="op">-</span><span class="st"> </span><span class="kw">colMeans</span>(data_rank)) 
+data_rank_center_scale &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">t</span>(data_rank_center)<span class="op">/</span><span class="kw">apply</span>(data_rank_center, <span class="dv">2</span>, sd)) 
+data_processed &lt;-<span class="st">  </span><span class="kw">t</span>(data_rank_center_scale) 
+<span class="co"># tune the number of cluster K</span>
+<span class="co"># nperms and nstart are set to be small in order to save computation time</span>
+cK &lt;-<span class="st"> </span><span class="kw">ChooseK</span>(data_processed[<span class="op">-</span>DMdata<span class="op">$</span>noisy.label,],<span class="dt">nClusters =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,<span class="dt">nperms =</span> <span class="dv">10</span>,<span class="dt">nstart =</span> <span class="dv">5</span>)
+<span class="kw">plot</span>(cK)</code></pre></div>
+<pre><code>#&gt; Warning in arrows(nClusters, ymean - ysd, nClusters, ymean + ysd, length =
+#&gt; 0.05, : zero-length arrow is of indeterminate angle and so skipped</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">K &lt;-<span class="st"> </span>cK<span class="op">$</span>OptimalK
+<span class="co"># tune weight</span>
+<span class="co"># the process of tuning weight will take some time</span>
+<span class="kw">system.time</span>(
+  res.tuneU &lt;-<span class="st"> </span><span class="kw">kmeans.weight.tune</span>(<span class="dt">x =</span> data_processed,<span class="dt">K =</span> K,<span class="dt">noisy.lab =</span> DMdata<span class="op">$</span>noisy.label,<span class="dt">nperms =</span> <span class="dv">10</span>,<span class="dt">nstart =</span> <span class="dv">5</span>)
+)</code></pre></div>
+<pre><code>#&gt;    user  system elapsed 
+#&gt;  207.55  188.58  396.26</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(res.tuneU)</code></pre></div>
+<pre><code>#&gt; Warning in arrows(1:nrow(x$weight.seq), x$gaps - x$sdgaps,
+#&gt; 1:nrow(x$weight.seq), : zero-length arrow is of indeterminate angle and so
+#&gt; skipped</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># perform weighted K-means</span>
+res &lt;-<span class="st"> </span><span class="kw">kmeans.weight</span>(<span class="dt">x =</span> data_processed,<span class="dt">K =</span> K,<span class="dt">weight =</span> res.tuneU<span class="op">$</span>bestweight)
+<span class="co"># check the result</span>
+<span class="kw">table</span>(res<span class="op">$</span>cluster,DMdata<span class="op">$</span>true.label)</code></pre></div>
+<pre><code>#&gt;    
+#&gt;      1  2  3
+#&gt;   1 45  0  2
+#&gt;   2  0 40  4
+#&gt;   3  0  0  9</code></pre>
+</div>
+<div id="references" class="section level3">
+<h3>References</h3>
+<ol style="list-style-type: decimal">
+<li>Robert Tibshirani, Guenther Walther, and Trevor Hastie. Estimating the number of clusters in a data set via the gap statistic. <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em>, 63(2):411-423, 2001.</li>
+<li>Daniela M Witten and Robert Tibshirani. A framework for feature selection in clustering. <em>Journal of the American Statistical Association</em>, 105(490):713-726, 2010.</li>
+</ol>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

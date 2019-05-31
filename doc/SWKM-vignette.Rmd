@@ -1,0 +1,140 @@
+---
+title: "A quick guide to SWKM"
+author: "Wenyu Zhang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{A quick guide to SWKM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>"
+)
+```
+
+This vignette aims to illustrate the basic usage of `SWKM` package.
+
+## Installation
+The released version of `SWKM` can be installed directly from Github with `devtools`:
+
+```{r, eval=FALSE, results='hide'}
+library(devtools)
+devtools::install_github("Van1yu3/SWKM")
+```
+
+As this package depends on the `RcppArmadillo` package, Windows users should install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) in advance to compile the package.
+
+Then we can load `SWKM`:
+
+```{r, results='hide'}
+library(SWKM)
+```
+
+## Example
+We illustrate the usage of `SWKM` on two datasets.
+
+### 1. Perform sparse weighted K-means on a normal distribution dataset
+First load the dataset:
+
+```{r}
+data("NormalDisData")
+```
+
+The dataset contains the following information:
+
+```{r}
+names(NormalDisData)
+```
+`data` is a 60 by 500 matrix indicating 60 observations with 500 features. The first 50 features are cluster-specific features.
+
+`ncluster` is the true number of clusters, which is 3 here.
+
+`true.label` is a 60-dimension vector indicating the true cluster.
+
+`noisy.label` indicates the position of noisy observations. The noisy observations are generated from the normal distribution with the same mean but a larger variance. 
+
+The number of clusters `K` must be determined before the clustering method is performed. The function `ChooseK`, which employs Gap Statistic(*Robert T. et al. (2001)*), is designed for this goal. A good way of lessening the impact of noisy observations on the choice of `K` is to remove them.
+
+```{r}
+set.seed(1)
+cK <- ChooseK(NormalDisData$data[-NormalDisData$noisy.label,],nClusters = 1:6)
+plot(cK)
+```
+
+Next, let's tune weight for the noisy observations:
+
+```{r}
+K <- cK$OptimalK
+system.time(
+  res.tuneU <- kmeans.weight.tune(x = NormalDisData$data,K = K,noisy.lab = NormalDisData$noisy.label,weight.seq = NULL)
+)
+```
+
+If `weight.seq` is provided, then `noisy.lab` will be omitted. Otherwise, the default setting is to fix the weight of normal observations as 1 and assign a sequence of candidate weight `c(1,0.8,0.5,0.2,0.1,0.08,0.05,0.02,0.01,0.005,0.001)` to noisy observations. See `help("kmeans.weight.tune")` for more details.
+
+We can plot the result to see which weight label is chosen:
+
+```{r}
+plot(res.tuneU)
+```
+
+From the figure, the weight of noisy observations is chosen to be 0.02. 
+
+The next step is to tune the sparsity parameter (*Daniela M Witten and Robert Tibshirani (2010)*):
+
+```{r}
+res.tunes <- KMeansSparseCluster.permute.weight(x = NormalDisData$data,K = K,weight = res.tuneU$bestweight)
+```
+
+Finally we can perform sparse weighted K-means with the weight and sparsity parameter:
+
+```{r}
+res <- KMeansSparseCluster.weight(x = NormalDisData$data,K = K,wbounds = res.tunes$bestw,weight = res.tuneU$bestweight)
+```
+
+Check the clustering result and the number of features selected:
+```{r}
+table(res[[1]]$Cs,NormalDisData$true.label)
+sum(res[[1]]$ws!=0)
+order(res[[1]]$ws,decreasing = TRUE)[1:50]
+```
+As expected, the 50 most important features lie mainly in the first 50 features. 
+
+
+### 2. Perform weighted K-means on a Dirichlet-multinomial distribution dataset
+
+This dataset has a dimension of 100 by 5000, and simulates the read counts in single-cell epigenomic data. The noisy observations in this dataset are set to be with 90\% missing values.
+
+The usage in this dataset is quite similar to the previous one, except that this dataset needs data preprocessing. One useful preprocessing method is to first take rank for each cell, then standardize the rank matrix to mean 0 and unit standard deviation.
+```{r}
+set.seed(1)
+data("DMdata")
+# data preprocessing
+data <- t(DMdata$data)
+data_rank <- apply(data, 2, rank) 
+data_rank_center<- t(t(data_rank) - colMeans(data_rank)) 
+data_rank_center_scale <- t(t(data_rank_center)/apply(data_rank_center, 2, sd)) 
+data_processed <-  t(data_rank_center_scale) 
+# tune the number of cluster K
+# nperms and nstart are set to be small in order to save computation time
+cK <- ChooseK(data_processed[-DMdata$noisy.label,],nClusters = 1:6,nperms = 10,nstart = 5)
+plot(cK)
+K <- cK$OptimalK
+# tune weight
+# the process of tuning weight will take some time
+system.time(
+  res.tuneU <- kmeans.weight.tune(x = data_processed,K = K,noisy.lab = DMdata$noisy.label,nperms = 10,nstart = 5)
+)
+plot(res.tuneU)
+# perform weighted K-means
+res <- kmeans.weight(x = data_processed,K = K,weight = res.tuneU$bestweight)
+# check the result
+table(res$cluster,DMdata$true.label)
+```
+
+### References
+1. Robert Tibshirani, Guenther Walther, and Trevor Hastie. Estimating the number of clusters in a data set via the gap statistic. *Journal of the Royal Statistical Society: Series B (Statistical Methodology)*, 63(2):411-423, 2001.
+2. Daniela M Witten and Robert Tibshirani. A framework for feature selection in clustering.  *Journal of the American Statistical Association*, 105(490):713-726, 2010.
