@@ -32,4 +32,4 @@ Main Functions
 Examples
 --------
 
-Please refer to the [vigenette](https://github.com/Van1yu3/SWKM/tree/master/vignettes) with two examples for a quick guide of SWKM package.
+Please refer to the [vigenette](https://github.com/Van1yu3/SWKM/tree/master/doc) with two examples for a quick guide to SWKM package.
