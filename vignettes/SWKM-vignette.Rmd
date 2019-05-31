@@ -2,12 +2,18 @@
 title: "A quick guide to SWKM"
 author: "Wenyu Zhang"
 date: "`r Sys.Date()`"
-output: html_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{A quick guide to SWKM}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>"
+)
+```
 
 This vignette aims to illustrate the basic usage of `SWKM` package.
 
@@ -118,6 +124,7 @@ cK <- ChooseK(data_processed[-DMdata$noisy.label,],nClusters = 1:6,nperms = 10,n
 plot(cK)
 K <- cK$OptimalK
 # tune weight
+# the process of tuning weight will take some time
 system.time(
   res.tuneU <- kmeans.weight.tune(x = data_processed,K = K,noisy.lab = DMdata$noisy.label,nperms = 10,nstart = 5)
 )
@@ -131,4 +138,3 @@ table(res$cluster,DMdata$true.label)
 ### References
 1. Robert Tibshirani, Guenther Walther, and Trevor Hastie. Estimating the number of clusters in a data set via the gap statistic. *Journal of the Royal Statistical Society: Series B (Statistical Methodology)*, 63(2):411-423, 2001.
 2. Daniela M Witten and Robert Tibshirani. A framework for feature selection in clustering.  *Journal of the American Statistical Association*, 105(490):713-726, 2010.
-
